@@ -1,21 +1,26 @@
 spring:
   config:
-    import: optional:classpath:application-jwt.yml   #jwt 설정을 외부 파일에서 불러옴
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/santa # 메모리 내 데이터베이스 URL, 동시접속을 위해 TCP 모드로 접속
-    driver-class-name: org.h2.Driver # H2 드라이버 클래스
-    username: sa # 기본 사용자 이름
-    password: # 기본 비밀번호
-  h2:
-    console:
-      enabled: true # H2 콘솔을 활성화합니다.
-      path: /h2-console # H2 콘솔의 접근 경로
+    import: optional:classpath:application-jwt.yml
+
+#  datasource:
+#    url: jdbc:mysql://santa-db-dev.crgcm8c448r8.ap-northeast-2.rds.amazonaws.com:3306/santa_dev?serverTimezone=Asia/Seoul&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+#    username: santa
+#    password:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
-      ddl-auto: create # 일단 우리는 스키마 생성해야하니까~
+      ddl-auto: update
     properties:
       hibernate:
-        format_sql: true # 얘는 실제 디비로 나가는 sql을 보여줍니다
-  sql:
-    init:
-      mode: always # 애플리케이션 시작 시 스크립트 초기화 (기본값: embedded)
+        format_sql: true
+    open-in-view: false
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+
+---
+spring:
+  profiles:
+    active: dev  # 기본은 개발용으로 실행

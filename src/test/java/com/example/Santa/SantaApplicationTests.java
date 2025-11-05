@@ -1,4 +1,4 @@
-package com.example.santa;
+package com.example.Santa;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
