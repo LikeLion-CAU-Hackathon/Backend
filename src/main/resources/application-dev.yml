@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:classpath:application-jwt.yml
   datasource:
     url: jdbc:mysql://santa-db-dev.crgcm8c448r8.ap-northeast-2.rds.amazonaws.com:3306/santa_dev?serverTimezone=Asia/Seoul&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
     username: santa

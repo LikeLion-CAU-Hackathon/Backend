@@ -1,26 +1,3 @@
 spring:
-  config:
-    import: optional:classpath:application-jwt.yml
-
-#  datasource:
-#    url: jdbc:mysql://santa-db-dev.crgcm8c448r8.ap-northeast-2.rds.amazonaws.com:3306/santa_dev?serverTimezone=Asia/Seoul&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
-#    username: santa
-#    password:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
-    open-in-view: false
-
-logging:
-  level:
-    org.hibernate.SQL: debug
-
----
-spring:
   profiles:
-    active: dev  # 기본은 개발용으로 실행
+    default: dev     # 기본 프로필
