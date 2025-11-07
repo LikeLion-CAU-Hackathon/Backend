@@ -1,12 +1,11 @@
 package com.example.Santa.repository;
 
-import com.example.Santa.domain.Member;
+import com.example.Santa.domain.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface AppUserRepository extends JpaRepository<AppUser, Long> {
+    Optional<AppUser> findByEmail(String email);
     boolean existsByEmail(String email);
-    Optional<Member> findByEmail(String email);
-
 }

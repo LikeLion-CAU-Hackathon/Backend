@@ -1,6 +1,17 @@
 spring:
   config:
-    import: optional:classpath:application-jwt.yml   #jwt 설정을 외부 파일에서 불러옴
+    import: optional:classpath:application-jwt.yml,optional:application-secret.yml
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: GOOGLE_CLIENT_ID
+            client-secret: GOOGLE_CLIENT_SECRET
+            scope:
+              - email
+              - profile
+            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
   datasource:
     url: jdbc:h2:tcp://localhost/~/santa # 메모리 내 데이터베이스 URL, 동시접속을 위해 TCP 모드로 접속
     driver-class-name: org.h2.Driver # H2 드라이버 클래스

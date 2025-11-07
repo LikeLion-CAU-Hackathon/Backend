@@ -1,4 +1,4 @@
-package com.example.santa;
+package com.example.Santa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

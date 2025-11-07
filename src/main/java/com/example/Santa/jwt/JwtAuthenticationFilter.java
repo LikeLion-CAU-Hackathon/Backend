@@ -1,7 +1,8 @@
 package com.example.Santa.jwt;
 
-import com.example.Santa.config.MemberAuthentication;
 import java.io.IOException;
+
+import com.example.Santa.config.MemberAuthentication;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
