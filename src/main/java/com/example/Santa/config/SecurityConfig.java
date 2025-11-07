@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable) // http basic auth 기반 로그인 인증창 뜨지 않게
                 .formLogin(AbstractHttpConfigurer::disable) // 기본 로그인 페이지 없애기
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/health","/join", "/login").permitAll() // 모두 허용
+                        .requestMatchers("/questions/**","/health","/join", "/login").permitAll() // 모두 허용
                         .requestMatchers("/**").authenticated()) // 인증된 사용자만 허용
                 .userDetailsService(customUserDetailsService);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // 해당 필터 전에 jwtFilter가 걸리도록

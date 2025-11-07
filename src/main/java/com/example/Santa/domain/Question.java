@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -19,7 +19,7 @@ public class Question {
     @Column(name = "content",nullable = false, length=30)
     private String content;
 
-    @Column(name = "access_time")
-    private LocalDateTime accessTime;
+    @Column(name = "access_day")
+    private LocalDate accessDay;
 
 }
