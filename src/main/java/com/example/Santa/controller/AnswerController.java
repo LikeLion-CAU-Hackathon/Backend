@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/answers")
@@ -70,5 +71,21 @@ public class AnswerController {
         List<Long> questionIds = answerService.getAnsweredQuestionIdsByUser(memberEmail);
         return ResponseEntity.ok(questionIds);
     }
+
+    @GetMapping("/list/{questionId}")
+    public ResponseEntity<?> hasUserAnsweredQuestion(
+            @PathVariable Long questionId,
+            Authentication authentication) {
+
+        if (authentication == null || authentication.getPrincipal() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("로그인이 필요합니다.");
+        }
+
+        String email = authentication.getName();
+        boolean answered = answerService.hasUserAnsweredQuestion(questionId, email);
+        return ResponseEntity.ok(Map.of("answered", answered));
+    }
+
 
 }
