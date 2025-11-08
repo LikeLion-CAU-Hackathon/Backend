@@ -17,13 +17,21 @@ public class S3Controller {
     private final S3Service s3Service;
     private final ImageRepository imageRepository;
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<S3ResponseDto> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            String imageUrl = s3Service.uploadImage(file);
-            return "File uploaded successfully! imageUrl: " + imageUrl;
+            var image = s3Service.uploadImage(file);
+
+            S3ResponseDto response = new S3ResponseDto(
+                    image.getId(),
+                    image.getUrl(),
+                    "File uploaded successfully!"
+            );
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
-            return "File upload failed!";
+            return ResponseEntity.badRequest().body(
+                    new S3ResponseDto(null, null, "File upload failed!")
+            );
         }
     }
 

@@ -28,7 +28,7 @@ public class S3Service {
     /**
      * S3에 이미지 업로드 하기
      */
-    public String uploadImage(MultipartFile image) throws IOException {
+    public Image uploadImage(MultipartFile image) throws IOException {
         String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename(); // 고유한 파일 이름 생성
 
         // 메타데이터 설정
@@ -46,7 +46,7 @@ public class S3Service {
         Image savedImage = new Image(url);
         imageRepository.save(savedImage);
 
-        return url; // 컨트롤러에서 클라이언트에게 반환
+        return savedImage;
     }
 
 
