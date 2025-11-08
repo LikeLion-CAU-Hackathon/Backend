@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -41,11 +42,35 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         String refreshToken = jwtTokenProvider.generateRefreshToken(email);
 
         // URL 인코딩
-        String a = URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
-        String r = URLEncoder.encode(refreshToken, StandardCharsets.UTF_8);
+        //String a = URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
+        //String r = URLEncoder.encode(refreshToken, StandardCharsets.UTF_8);
 
-        // 간단한 리다이렉트 방식
-        String url = String.format("%s?access=%s&refresh=%s", redirectUrl, a, r);
-        response.sendRedirect(url);
+        // 쿠키 설정
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
+                .httpOnly(true)
+                .secure(false) // HTTP에서도 전송되게 (HTTPS로 바꾸면 true)
+                .path("/")
+                .maxAge(60 * 60) // 1시간
+                .sameSite("Lax")
+                .build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(60L * 60 * 24 * 7) // 7일
+                .sameSite("Lax")
+                .build();
+
+        // 쿠키 추가
+        response.addHeader("Set-Cookie", accessCookie.toString());
+        response.addHeader("Set-Cookie", refreshCookie.toString());
+
+        // 프론트 리다이렉트 (쿼리파라미터 대신 쿠키로 인증)
+        try {
+            response.sendRedirect(redirectUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
