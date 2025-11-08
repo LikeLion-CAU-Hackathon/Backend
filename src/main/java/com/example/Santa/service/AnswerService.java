@@ -9,6 +9,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class AnswerService {
@@ -39,4 +41,12 @@ public class AnswerService {
 
         return answerRepository.save(newAnswer);
     }
-}
+
+    @Transactional(readOnly = true) // 읽기 전용 트랜잭션 (성능 향상)
+    public List<Long> getAnsweredQuestionIdsByUser(String email) {
+
+        AppUser appUser = appUserRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다. (email: " + email + ")"));
+
+        return answerRepository.findAnsweredQuestionIdsByAppUser(appUser);
+    }}

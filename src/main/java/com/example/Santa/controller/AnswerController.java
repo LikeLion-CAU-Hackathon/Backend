@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/answers")
@@ -43,7 +44,6 @@ public class AnswerController {
                 .body("답변 등록 성공! ID: " + createdAnswer.getId());
     }
 
-
     // 404 Not Found (질문이나 유저가 없을 때)
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleNotFound(EntityNotFoundException ex) {
@@ -59,4 +59,11 @@ public class AnswerController {
                 .status(HttpStatus.CONFLICT)
                 .body(ex.getMessage());
     }
-}
+
+    @GetMapping("/list")
+    public ResponseEntity<List<Long>> getMyAnsweredQuestionIds(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        String memberEmail = userDetails.getUsername();
+        List<Long> questionIds = answerService.getAnsweredQuestionIdsByUser(memberEmail);
+        return ResponseEntity.ok(questionIds);
+    }}
