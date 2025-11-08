@@ -7,8 +7,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -61,9 +59,16 @@ public class AnswerController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Long>> getMyAnsweredQuestionIds(
-            @AuthenticationPrincipal UserDetails userDetails) {
-        String memberEmail = userDetails.getUsername();
+    public ResponseEntity<?> getMyAnsweredQuestionIds(Authentication authentication) {
+        // 인증 정보 없을 때 처리
+        if (authentication == null || authentication.getPrincipal() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("로그인이 필요합니다.");
+        }
+        String memberEmail = authentication.getName();
+
         List<Long> questionIds = answerService.getAnsweredQuestionIdsByUser(memberEmail);
         return ResponseEntity.ok(questionIds);
-    }}
+    }
+
+}
