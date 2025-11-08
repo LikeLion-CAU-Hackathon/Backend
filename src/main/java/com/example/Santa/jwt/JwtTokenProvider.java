@@ -1,6 +1,5 @@
 package com.example.Santa.jwt;
 
-import com.example.Santa.service.CustomUserDetailsService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +22,6 @@ public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;
-
-    private final CustomUserDetailsService customUserDetailsService;
 
     // access token 생성
     public String generateAccessToken(String username) {
