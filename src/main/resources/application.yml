@@ -1,7 +1,6 @@
 spring:
   profiles:
     active: local
-
   config:
     import:
       #- optional:classpath:application-jwt.yml

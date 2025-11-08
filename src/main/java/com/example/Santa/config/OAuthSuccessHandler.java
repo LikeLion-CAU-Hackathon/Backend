@@ -40,7 +40,6 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtTokenProvider.generateAccessToken(email);
         String refreshToken = jwtTokenProvider.generateRefreshToken(email);
 
-
         // URL 인코딩
         String a = URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
         String r = URLEncoder.encode(refreshToken, StandardCharsets.UTF_8);

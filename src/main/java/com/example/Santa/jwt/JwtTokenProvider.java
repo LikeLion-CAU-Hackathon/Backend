@@ -24,14 +24,14 @@ public class JwtTokenProvider {
     private String JWT_SECRET;
 
     // access token 생성
-    public String generateAccessToken(String username) {
+    public String generateAccessToken(String email) {
         final Date now = new Date();
 
         final Claims claims = Jwts.claims()
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION_TIME));
 
-        claims.put("username", username); // username으로 회원을 구분한다고 가정하고 만들어보겠습니다. memberId로 만들기도 합니다!
+        claims.put("email", email);
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // header
@@ -42,13 +42,13 @@ public class JwtTokenProvider {
 
 
     // refresh token 생성
-    public String generateRefreshToken(String username) {
+    public String generateRefreshToken(String email) {
         final Date now = new Date();
         final Claims claims = Jwts.claims()
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_TIME));
 
-        claims.put("username", username);
+        claims.put("email", email);
 
         // refresh token은 db나 cache server에 저장하기도 합니다
 

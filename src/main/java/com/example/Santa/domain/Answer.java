@@ -26,7 +26,7 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
-    private Member member;
+    private AppUser appUser;
 
     @Column (name = "contents", nullable = false, length = 120)
     private String contents;
@@ -35,9 +35,9 @@ public class Answer {
     @Column(name = "created_time", updatable = false)
     private LocalDateTime createdTime;
 
-    public Answer(Question question, Member member, String contents) {
+    public Answer(Question question, AppUser appUser, String contents) {
         this.question = question;
-        this.member = member;
+        this.appUser = appUser;
         this.contents = contents;
     }
 }

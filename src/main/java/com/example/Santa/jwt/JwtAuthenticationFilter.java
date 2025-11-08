@@ -40,7 +40,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 log.error("현재 상태: " + jwtValidationType.toString());
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            // log.error(e.getMessage());
+            log.error("JWT 필터에서 예외가 발생했습니다.", e);
         }
         filterChain.doFilter(request, response);
     }

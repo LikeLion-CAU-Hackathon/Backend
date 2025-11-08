@@ -6,6 +6,7 @@ import com.example.Santa.service.AnswerService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -26,19 +27,22 @@ public class AnswerController {
     public ResponseEntity<String> createAnswer(
             @PathVariable Long questionId,
             @RequestBody AnswerRequestDto requestDto,
-            @AuthenticationPrincipal UserDetails userDetails) { // 1. 토큰에서 사용자 정보 가져오기
+            Authentication authentication) {
 
-        String memberEmail = userDetails.getUsername();      // 2. UserDetails에서 username(이메일) 추출
+        if (authentication == null || authentication.getPrincipal() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("로그인이 필요합니다.");
+        }
 
-        Answer createdAnswer = answerService.createAnswer(questionId, requestDto, memberEmail);
+        String email = authentication.getName();
 
-        // 4. 성공 응답 (201 Created)
-        // 생성된 답변의 URI를 함께 반환 (표준 REST 응답)
-        URI location = URI.create("/answers/{QuestionId}" + createdAnswer.getId());
+        Answer createdAnswer = answerService.createAnswer(questionId, requestDto, email);
 
+        URI location = URI.create("/answers/" + createdAnswer.getId());
         return ResponseEntity.created(location)
-                .body("답변이 성공적으로 등록되었습니다. ID: " + createdAnswer.getId());
+                .body("답변 등록 성공! ID: " + createdAnswer.getId());
     }
+
 
     // 404 Not Found (질문이나 유저가 없을 때)
     @ExceptionHandler(EntityNotFoundException.class)
