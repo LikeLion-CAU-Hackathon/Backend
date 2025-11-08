@@ -41,5 +41,5 @@ spring:
     init:
       mode: always
 
-jwt:
-  secret: ${jwt.secret}
+# jwt:
+  # secret: ${jwt.secret}
