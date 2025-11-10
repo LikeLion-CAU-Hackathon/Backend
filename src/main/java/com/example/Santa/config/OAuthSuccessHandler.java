@@ -24,8 +24,14 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
     private final AppUserService appUserService;
 
-    @Value("${app.oauth2.redirect-url:http://localhost:3000/oauth/callback}")
+    @Value("${app.oauth2.redirect-url}")
     private String redirectUrl;
+
+    @Value("${app.cookie.secure:false}")
+    private boolean cookieSecure;
+
+    @Value("${app.cookie.same-site:Lax}")
+    private String sameSite;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -48,18 +54,18 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         // 쿠키 설정
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
-                .secure(false) // HTTP에서도 전송되게 (HTTPS로 바꾸면 true)
+                .secure(cookieSecure)
                 .path("/")
                 .maxAge(60 * 60) // 1시간
-                .sameSite("Lax")
+                .sameSite(sameSite)
                 .build();
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
-                .secure(false)
+                .secure(cookieSecure)
                 .path("/")
                 .maxAge(60L * 60 * 24 * 7) // 7일
-                .sameSite("Lax")
+                .sameSite(sameSite)
                 .build();
 
         // 쿠키 추가
