@@ -1,0 +1,40 @@
+spring:
+  config:
+    import: ""
+  datasource:
+    url: jdbc:h2:mem:santa
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  sql:
+    init:
+      mode: never
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: dummy
+            client-secret: dummy
+
+# ▼ 테스트에서 필요한 더미 값들 (프로젝트에 맞게 추가/수정)
+jwt:
+  secret: test-secret
+
+cloud:
+  aws:
+    s3:
+      bucket: dummy-bucket
+      access-key: dummy
+      secret-key: dummy
+      region: ap-northeast-2
+app:
+  oauth2:
+    redirect-url: "http://localhost/test-callback"
+
