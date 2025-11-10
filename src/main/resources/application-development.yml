@@ -4,3 +4,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${database.username}
     password: ${database.password}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            redirect-uri: "https://hackathon-santa.p-e.kr/login/oauth2/code/google"
+
+server:
+  forward-headers-strategy: framework
