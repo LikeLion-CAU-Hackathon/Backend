@@ -25,4 +25,14 @@ public class QuestionService {
 
         return question.getContent();
     }
+
+    public long getQuestionIdByDate(LocalDate date){
+        Question question = questionRepository
+                .findByAccessDay(date)
+                .orElseThrow(() -> new EntityNotFoundException("해당 날짜 질문 찾을 수 없음: " +date));
+
+        return question.getId();
+    }
+
+
 }

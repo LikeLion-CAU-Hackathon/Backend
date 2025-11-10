@@ -14,4 +14,6 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
     @Query("SELECT a.question.id FROM Answer a WHERE a.appUser = :user")
     List<Long> findAnsweredQuestionIdsByAppUser(@Param("user") AppUser appUser);
+
+    List<Answer> findByQuestionId(long questionId);
 }
