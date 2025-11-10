@@ -6,12 +6,14 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.Santa.domain.Image;
 import com.example.Santa.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.UUID;
 
+@Profile("deployment")
 @Service
 public class S3Service {
     private final AmazonS3 amazonS3;

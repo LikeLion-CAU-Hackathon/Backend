@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final String token = getJwtFromRequest(request);
             JwtValidationType jwtValidationType = jwtTokenProvider.validateToken(token);
             if (jwtValidationType == VALID_JWT) {
-                String username = jwtTokenProvider.getUsernameFromAccessToken(token);
+                String username = jwtTokenProvider.getEmailFromAccessToken(token);
                 MemberAuthentication authentication = MemberAuthentication.createMemberAuthentication(username);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);

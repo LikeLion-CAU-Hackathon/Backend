@@ -75,9 +75,9 @@ public class JwtTokenProvider {
         }
     }
 
-    public String getUsernameFromAccessToken(String token) {
+    public String getEmailFromAccessToken(String token) {
         Claims claims = getBody(token);
-        return claims.get("username").toString();
+        return claims.get("email", String.class);
     }
 
     private Claims getBody(final String token) {
