@@ -2,10 +2,12 @@ package com.example.Santa.service;
 
 import com.example.Santa.domain.*;
 import com.example.Santa.dto.request.AnswerRequestDto;
+import com.example.Santa.dto.response.AnswerResponseDto;
 import com.example.Santa.repository.AnswerRepository;
 import com.example.Santa.repository.AppUserRepository;
 import com.example.Santa.repository.QuestionRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,17 +15,12 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AnswerService {
 
     private final AnswerRepository answerRepository;
     private final AppUserRepository appUserRepository;
     private final QuestionRepository questionRepository;
-
-    public AnswerService(AnswerRepository answerRepository, QuestionRepository questionRepository, AppUserRepository appUserRepository) {
-        this.answerRepository = answerRepository;
-        this.appUserRepository = appUserRepository;
-        this.questionRepository = questionRepository;
-    }
 
     /**
      * 답변 생성 API
@@ -60,6 +57,14 @@ public class AnswerService {
                 .orElseThrow(() -> new EntityNotFoundException("질문을 찾을 수 없습니다. (id: " + questionId + ")"));
 
         return answerRepository.existsByQuestionAndAppUser(question, appUser);
+    }
+
+    public List<AnswerResponseDto> getAnswersByQuestion(Long questionId) {
+        List<Answer> answers = answerRepository.findByQuestionId(questionId);
+
+        return answers.stream()
+                .map(AnswerResponseDto::fromEntity)
+                .toList();
     }
 
 }

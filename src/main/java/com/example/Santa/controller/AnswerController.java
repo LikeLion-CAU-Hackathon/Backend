@@ -59,6 +59,7 @@ public class AnswerController {
                 .body(ex.getMessage());
     }
 
+    //로그인 한 유저가 답한 질문들 리스트
     @GetMapping("/list")
     public ResponseEntity<?> getMyAnsweredQuestionIds(Authentication authentication) {
         // 인증 정보 없을 때 처리
@@ -72,6 +73,7 @@ public class AnswerController {
         return ResponseEntity.ok(questionIds);
     }
 
+    // 해당 유저가 질문에 답했는지 안했는지 T/F
     @GetMapping("/list/{questionId}")
     public ResponseEntity<?> hasUserAnsweredQuestion(
             @PathVariable Long questionId,
@@ -86,6 +88,7 @@ public class AnswerController {
         boolean answered = answerService.hasUserAnsweredQuestion(questionId, email);
         return ResponseEntity.ok(Map.of("answered", answered));
     }
+
 
 
 }
