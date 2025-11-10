@@ -38,7 +38,9 @@ public class SecurityConfig {
                 // 접근 제어
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/oauth2/**", "/login/oauth2/**", // 소셜 로그인 경로
+                                "/oauth2/**",
+                                "/login/oauth2/**", // 소셜 로그인 경로
+                                "/oauth/callback",
                                 "/h2-console/**",                 // H2 콘솔
                                 "/error"                          // 에러 페이지
                         ).permitAll()
