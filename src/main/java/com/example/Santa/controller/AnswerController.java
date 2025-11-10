@@ -7,11 +7,11 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/answers")
@@ -43,7 +43,6 @@ public class AnswerController {
                 .body("답변 등록 성공! ID: " + createdAnswer.getId());
     }
 
-
     // 404 Not Found (질문이나 유저가 없을 때)
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleNotFound(EntityNotFoundException ex) {
@@ -59,4 +58,34 @@ public class AnswerController {
                 .status(HttpStatus.CONFLICT)
                 .body(ex.getMessage());
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getMyAnsweredQuestionIds(Authentication authentication) {
+        // 인증 정보 없을 때 처리
+        if (authentication == null || authentication.getPrincipal() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("로그인이 필요합니다.");
+        }
+        String memberEmail = authentication.getName();
+
+        List<Long> questionIds = answerService.getAnsweredQuestionIdsByUser(memberEmail);
+        return ResponseEntity.ok(questionIds);
+    }
+
+    @GetMapping("/list/{questionId}")
+    public ResponseEntity<?> hasUserAnsweredQuestion(
+            @PathVariable Long questionId,
+            Authentication authentication) {
+
+        if (authentication == null || authentication.getPrincipal() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("로그인이 필요합니다.");
+        }
+
+        String email = authentication.getName();
+        boolean answered = answerService.hasUserAnsweredQuestion(questionId, email);
+        return ResponseEntity.ok(Map.of("answered", answered));
+    }
+
+
 }
