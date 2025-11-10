@@ -5,9 +5,5 @@ spring:
     username: ${database.username}
     password: ${database.password}
 
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
+server:
+  port: 8080
