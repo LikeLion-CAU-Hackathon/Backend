@@ -26,7 +26,7 @@ public class DailyNickService {
 
     private final Random random = new Random();
 
-    @Scheduled(cron= "0 * * * * *") // 자동 닉네임 업데이트
+    @Scheduled(cron= "0 0 0 * * *") // 자동 닉네임 업데이트
     @Transactional
     public void saveDailynick() {
         System.out.println("save dailynick");
