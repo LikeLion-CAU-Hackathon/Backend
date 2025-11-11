@@ -28,4 +28,7 @@ public class AppUser {
         this.email = email;
         this.nickname = nickname;
     }
+    public void setNickname(String nickname){
+        this.nickname = nickname;
+    }
 }
