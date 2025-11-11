@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -51,5 +52,9 @@ public class ReplyService {
 
     public long countReply(Long answerId) {
         return replyRepository.countByAnswer_Id(answerId);
+    }
+
+    public List<Reply> getReply(Long answerId) {
+        return replyRepository.findAllByAnswer_IdOrderByCreatedTimeAsc(answerId);
     }
 }

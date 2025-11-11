@@ -1,6 +1,7 @@
 package com.example.santa.controller;
 
 
+import com.example.santa.dto.response.AnswerListDto;
 import com.example.santa.dto.response.AnswerResponseDto;
 import com.example.santa.dto.response.QuestionResponseDto;
 import com.example.santa.service.AnswerService;
@@ -38,5 +39,11 @@ public class QuestionController {
     public ResponseEntity<List<AnswerResponseDto>> getAnswersByQuestion(@PathVariable Long questionId) {
         List<AnswerResponseDto> answers = answerService.getAnswersByQuestion(questionId);
         return ResponseEntity.ok(answers);
+    }
+
+    @GetMapping("/{questionId}/answers")
+    public ResponseEntity<List<AnswerListDto>> getAnswersWithCounts(@PathVariable Long questionId) {
+        List<AnswerListDto> results = answerService.getAnswersWithCounts(questionId);
+        return ResponseEntity.ok(results);
     }
 }

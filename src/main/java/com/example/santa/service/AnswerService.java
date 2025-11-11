@@ -2,6 +2,7 @@ package com.example.santa.service;
 
 import com.example.santa.domain.*;
 import com.example.santa.dto.request.AnswerRequestDto;
+import com.example.santa.dto.response.AnswerListDto;
 import com.example.santa.dto.response.AnswerResponseDto;
 import com.example.santa.repository.AnswerRepository;
 import com.example.santa.repository.AppUserRepository;
@@ -65,6 +66,10 @@ public class AnswerService {
         return answers.stream()
                 .map(AnswerResponseDto::fromEntity)
                 .toList();
+    }
+
+    public List<AnswerListDto> getAnswersWithCounts(Long questionId) {
+        return answerRepository.findAnswersWithCountsByQuestionId(questionId);
     }
 
 }
