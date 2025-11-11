@@ -1,9 +1,9 @@
-package com.example.Santa;
+package com.example.santa;
 
-import com.example.Santa.domain.DailyAdj;
-import com.example.Santa.domain.DailyNoun;
-import com.example.Santa.repository.DailyAdjRepository;
-import com.example.Santa.repository.DailyNounRepository;
+import com.example.santa.domain.DailyAdj;
+import com.example.santa.domain.DailyNoun;
+import com.example.santa.repository.DailyAdjRepository;
+import com.example.santa.repository.DailyNounRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
