@@ -2,6 +2,7 @@ package com.example.santa.controller;
 
 import com.example.santa.domain.Answer;
 import com.example.santa.dto.request.AnswerRequestDto;
+import com.example.santa.dto.response.AnswerListDto;
 import com.example.santa.service.AnswerService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -88,7 +89,5 @@ public class AnswerController {
         boolean answered = answerService.hasUserAnsweredQuestion(questionId, email);
         return ResponseEntity.ok(Map.of("answered", answered));
     }
-
-
 
 }

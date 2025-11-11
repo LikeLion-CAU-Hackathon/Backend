@@ -10,7 +10,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -34,4 +37,24 @@ public class ReplyController {
         long count = replyService.countReply(answerId);
         return ResponseEntity.ok(count);
     }
+
+    @GetMapping
+    public ResponseEntity<List<Map<String, Object>>> getReplies(@PathVariable Long answerId) {
+        List<Reply> replies = replyService.getReply(answerId);
+
+        List<Map<String, Object>> result = replies.stream()
+                .map(r -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("replyId", r.getId());
+                    map.put("answerId", r.getAnswer().getId());
+                    map.put("userId", r.getUser().getId());
+                    map.put("userEmail", r.getUser().getEmail());
+                    map.put("text", r.getText());
+                    map.put("createdTime", r.getCreatedTime());
+                    return map;
+                })
+                .toList();
+
+        return ResponseEntity.ok(result);
+        }
 }
