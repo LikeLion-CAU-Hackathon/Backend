@@ -68,6 +68,7 @@ public class SecurityConfig {
             configuration.setAllowedMethods(Collections.singletonList("*")); // 모든 메서드 허용
             configuration.setAllowedOrigins(Arrays.asList(
                     "http://localhost:3000",
+                    "http://localhost:5173",
                     "https://hackathon-santa.p-e.kr"   // 프론트가 이 도메인/서브도메인이라면 추가
             ));
             configuration.setAllowedHeaders(Collections.singletonList("*")); // 모든 헤더 허용
