@@ -7,9 +7,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -41,20 +43,26 @@ public class ReplyController {
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> getReplies(@PathVariable Long answerId) {
         List<Reply> replies = replyService.getReply(answerId);
-
+        String date = LocalDate.now().toString();
         List<Map<String, Object>> result = replies.stream()
                 .map(r -> {
                     Map<String, Object> map = new HashMap<>();
                     map.put("replyId", r.getId());
                     map.put("answerId", r.getAnswer().getId());
                     map.put("userId", r.getUser().getId());
-                    map.put("userEmail", r.getUser().getEmail());
                     map.put("text", r.getText());
                     map.put("createdTime", r.getCreatedTime());
+                    String Nickname;
+                    if(date.equals("2025-12-25")){
+                        Nickname = r.getUser().getName();
+                    }
+                    else{
+                        Nickname = r.getUser().getNickname();
+                    }
+                    map.put("userNickname", Nickname);
                     return map;
                 })
                 .toList();
-
         return ResponseEntity.ok(result);
         }
 }
