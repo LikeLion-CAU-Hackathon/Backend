@@ -43,8 +43,9 @@ public class SecurityConfig {
                                 "/oauth2/**",
                                 "/login/oauth2/**", // 소셜 로그인 경로
                                 "/oauth/callback",
-                                "/h2-console/**",                 // H2 콘솔
-                                "/error"                          // 에러 페이지
+                                "/h2-console/**",   // H2 콘솔
+                                "/error",           // 에러 페이지
+                                "/swagger-ui.html"  // swagger
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
