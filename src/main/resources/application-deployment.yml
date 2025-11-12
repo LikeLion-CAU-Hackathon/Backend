@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:mysql://${database.deployment.host}/${database.name}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${database.username}
+    password: ${database.password}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            redirect-uri: "https://hackathon-santa.p-e.kr/login/oauth2/code/google"
+
+app:
+  oauth2:
+    redirect-url: "https://hackathon-santa.p-e.kr/oauth/callback"
+  cookie:
+    secure: true                # HTTPS라서 true
+    same-site: Lax              # 프론트가 다른 도메인이면 None 로 변경
+
+server:
+  forward-headers-strategy: framework
+  tomcat:
+    remoteip:
+      remote-ip-header: X-Forwarded-For
+      protocol-header: X-Forwarded-Proto

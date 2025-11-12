@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:mysql://${database.development.host}/${database.name}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${database.username}
+    password: ${database.password}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
+
+app:
+  oauth2:
+    redirect-url: "http://localhost:3000/oauth/callback"
+  cookie:
+    secure: false
+    same-site: Lax   # 로컬은 HTTPS가 아니라 None을 못 씀
+
+server:
+  port: 8080

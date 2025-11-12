@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/santa
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
+
+app:
+  oauth2:
+    redirect-url: "http://localhost:3000/oauth/callback"
+  cookie:
+    secure: false
+    same-site: Lax
+
+server:
+  port: 8080
