@@ -45,7 +45,10 @@ public class SecurityConfig {
                                 "/oauth/callback",
                                 "/h2-console/**",   // H2 콘솔
                                 "/error",           // 에러 페이지
-                                "/swagger-ui.html"  // swagger
+                                "/swagger-ui.html",  // Swagger UI 메인 페이지
+                                "/swagger-ui/**",    // Swagger UI 리소스 (css, js...)
+                                "/v3/api-docs/**",   // OpenAPI 명세서 (JSON)
+                                "/webjars/swagger-ui/**" // 웹jar 리소스
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
