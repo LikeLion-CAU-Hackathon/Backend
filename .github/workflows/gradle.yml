@@ -71,7 +71,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: application-jar
-      
       - name: Deploy to EC2
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
@@ -81,16 +80,23 @@ jobs:
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           
-          # JAR 파일명 찾기
           JAR_FILE=$(ls *.jar | head -n 1)
           
-          # EC2로 JAR 파일 전송
-          scp -i private_key.pem -o StrictHostKeyChecking=no $JAR_FILE ${USER}@${HOST}:/home/${USER}/app/application.jar
+          # 올바른 경로로 전송
+          scp -i private_key.pem -o StrictHostKeyChecking=no $JAR_FILE ${USER}@${HOST}:/home/${USER}/Backend/build/libs/Santa-0.0.1-SNAPSHOT.jar
           
-          # EC2에서 애플리케이션 재시작
+          # 기존 프로세스 종료하고 새로 시작
           ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} << 'EOF'
-            sudo systemctl restart myapp
-            sudo systemctl status myapp
+            # 기존 프로세스 종료
+            pkill -f 'Santa-0.0.1-SNAPSHOT.jar' || true
+            
+            # 새 프로세스 시작
+            cd ~/Backend
+            nohup java -jar build/libs/Santa-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+            
+            # 프로세스 확인
+            sleep 3
+            ps aux | grep Santa-0.0.1-SNAPSHOT.jar | grep -v grep
           EOF
           
           rm -f private_key.pem
