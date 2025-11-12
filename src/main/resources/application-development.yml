@@ -14,7 +14,8 @@ spring:
 
 app:
   oauth2:
-    redirect-url: "http://localhost:3000/oauth/callback"
+#    redirect-url: "http://localhost:3000/oauth/callback"
+    redirect-url: "http://localhost:5173/calendar"
   cookie:
     secure: false
     same-site: Lax   # 로컬은 HTTPS가 아니라 None을 못 씀

@@ -43,8 +43,9 @@ public class SecurityConfig {
                                 "/oauth2/**",
                                 "/login/oauth2/**", // 소셜 로그인 경로
                                 "/oauth/callback",
-                                "/h2-console/**",                 // H2 콘솔
-                                "/error"                          // 에러 페이지
+                                "/h2-console/**",   // H2 콘솔
+                                "/error",           // 에러 페이지
+                                "/swagger-ui.html"  // swagger
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -68,6 +69,7 @@ public class SecurityConfig {
             configuration.setAllowedMethods(Collections.singletonList("*")); // 모든 메서드 허용
             configuration.setAllowedOrigins(Arrays.asList(
                     "http://localhost:3000",
+                    "http://localhost:5173",
                     "https://hackathon-santa.p-e.kr"   // 프론트가 이 도메인/서브도메인이라면 추가
             ));
             configuration.setAllowedHeaders(Collections.singletonList("*")); // 모든 헤더 허용
