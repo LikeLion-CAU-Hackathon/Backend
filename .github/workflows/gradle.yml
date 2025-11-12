@@ -94,9 +94,16 @@ jobs:
             cd ~/Backend
             nohup java -jar build/libs/Santa-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
             
-            # 프로세스 확인
-            sleep 3
-            ps aux | grep Santa-0.0.1-SNAPSHOT.jar | grep -v grep
+            # 프로세스 확인 (실패해도 계속 진행)
+            sleep 5
+            if ps aux | grep -q '[S]anta-0.0.1-SNAPSHOT.jar'; then
+              echo "Application started successfully"
+              ps aux | grep Santa-0.0.1-SNAPSHOT.jar | grep -v grep
+            else
+              echo "Warning: Application process not found. Check logs:"
+              tail -20 app.log
+              exit 1
+            fi
           EOF
           
           rm -f private_key.pem
