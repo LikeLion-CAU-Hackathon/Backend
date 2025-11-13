@@ -1,5 +1,5 @@
 # 워크플로우의 이름
-name: Spring Boot CI with Gradle
+name: Spring Boot CI/CD with Gradle
 
 # 워크플로우가 실행될 시점(이벤트)을 정의
 on:
@@ -15,20 +15,20 @@ jobs:
   build:
     # 이 Job을 실행할 가상 머신 환경 (Ubuntu 최신 버전)
     runs-on: ubuntu-latest
-
+    
     # Job 내부에서 실행될 단계(Step)들
     steps:
       # 1. 코드 체크아웃
       - name: Checkout Repository
         uses: actions/checkout@v4
-
+      
       # 2. JDK 17 설치
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-
+      
       # 3. Gradle 캐시 설정
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -39,72 +39,92 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-
+      
       # 4. gradlew 실행 권한 부여
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
-
-      # 5. Gradle로 빌드 및 테스트
+      
+      # 5. Gradle로 빌드 (bootJar 사용)
       - name: Build with Gradle
-        run: ./gradlew build
-
+        run: ./gradlew clean bootJar
+      
+      # 6. 테스트 리포트 업로드 (실패해도 업로드)
       - name: Upload test report
-        if: always()  # 실패해도 업로드
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: build/reports/tests/test
       
+      # 7. JAR 파일 업로드 (main 브랜치만)
       - name: Upload JAR
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
           name: application-jar
           path: build/libs/*.jar
+
+  # 배포 Job
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    # main 브랜치에 push했을 때만 배포
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
     steps:
+      # 1. 빌드된 JAR 파일 다운로드
       - name: Download JAR
         uses: actions/download-artifact@v4
         with:
           name: application-jar
+      
+      # 2. EC2에 배포
       - name: Deploy to EC2
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.EC2_HOST }}
           USER: ${{ secrets.EC2_USER }}
         run: |
+          # SSH 키 설정
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           
+          # JAR 파일 찾기
           JAR_FILE=$(ls *.jar | head -n 1)
+          echo "Deploying $JAR_FILE to EC2..."
           
-          # 올바른 경로로 전송
-          scp -i private_key.pem -o StrictHostKeyChecking=no $JAR_FILE ${USER}@${HOST}:/home/${USER}/Backend/build/libs/Santa-0.0.1-SNAPSHOT.jar
+          # EC2 서버로 JAR 파일 전송
+          scp -i private_key.pem -o StrictHostKeyChecking=no $JAR_FILE ${USER}@${HOST}:/home/${USER}/Santa-0.0.1-SNAPSHOT.jar
           
-          # 기존 프로세스 종료하고 새로 시작
+          # SSH로 서버 접속하여 애플리케이션 재시작
           ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} << 'EOF'
+            echo "Stopping existing application..."
             # 기존 프로세스 종료
             pkill -f 'Santa-0.0.1-SNAPSHOT.jar' || true
             
-            # 새 프로세스 시작
-            cd ~/Backend
-            nohup java -jar build/libs/Santa-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+            # 프로세스가 완전히 종료될 때까지 대기
+            sleep 3
             
-            # 프로세스 확인 (실패해도 계속 진행)
+            echo "Starting new application..."
+            # 새 프로세스 시작
+            nohup java -jar ~/Santa-0.0.1-SNAPSHOT.jar > ~/app.log 2>&1 &
+            
+            # 애플리케이션 시작 확인
+            echo "Waiting for application to start..."
             sleep 5
+            
             if ps aux | grep -q '[S]anta-0.0.1-SNAPSHOT.jar'; then
-              echo "Application started successfully"
+              echo "Application started successfully!"
+              echo "Running processes:"
               ps aux | grep Santa-0.0.1-SNAPSHOT.jar | grep -v grep
             else
-              echo "Warning: Application process not found. Check logs:"
-              tail -20 app.log
+              echo "Application failed to start. Check logs:"
+              tail -30 ~/app.log
               exit 1
             fi
           EOF
           
+          # SSH 키 삭제
           rm -f private_key.pem
-
+          
+          echo "Deployment completed!"
