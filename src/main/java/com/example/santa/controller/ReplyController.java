@@ -1,6 +1,7 @@
 package com.example.santa.controller;
 
 import com.example.santa.domain.Reply;
+import com.example.santa.dto.response.ReplyResponseDto;
 import com.example.santa.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -41,28 +42,7 @@ public class ReplyController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Map<String, Object>>> getReplies(@PathVariable Long answerId) {
-        List<Reply> replies = replyService.getReply(answerId);
-        String date = LocalDate.now().toString();
-        List<Map<String, Object>> result = replies.stream()
-                .map(r -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("replyId", r.getId());
-                    map.put("answerId", r.getAnswer().getId());
-                    map.put("userId", r.getUser().getId());
-                    map.put("text", r.getText());
-                    map.put("createdTime", r.getCreatedTime());
-                    String Nickname;
-                    if(date.equals("2025-12-25")){
-                        Nickname = r.getUser().getName();
-                    }
-                    else{
-                        Nickname = r.getUser().getNickname();
-                    }
-                    map.put("userNickname", Nickname);
-                    return map;
-                })
-                .toList();
-        return ResponseEntity.ok(result);
-        }
+    public ResponseEntity<List<ReplyResponseDto>> getReply(@PathVariable Long answerId) {
+        return ResponseEntity.ok(replyService.getReply(answerId));
+    }
 }

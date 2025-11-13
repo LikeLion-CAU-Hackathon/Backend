@@ -3,6 +3,7 @@ package com.example.santa.service;
 import com.example.santa.domain.Answer;
 import com.example.santa.domain.AppUser;
 import com.example.santa.domain.Reply;
+import com.example.santa.dto.response.ReplyResponseDto;
 import com.example.santa.repository.AnswerRepository;
 import com.example.santa.repository.AppUserRepository;
 import com.example.santa.repository.ReplyRepository;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -54,7 +57,21 @@ public class ReplyService {
         return replyRepository.countByAnswer_Id(answerId);
     }
 
-    public List<Reply> getReply(Long answerId) {
-        return replyRepository.findAllByAnswer_IdOrderByCreatedTimeAsc(answerId);
+    public List<ReplyResponseDto> getReply(Long answerId) {
+        LocalDate today = LocalDate.now();
+        boolean isChristmas = today.equals(LocalDate.of(2025, 12, 25));
+
+        return replyRepository.findAllByAnswer_IdOrderByCreatedTimeAsc(answerId)
+                .stream()
+                .map(r->ReplyResponseDto.builder()
+                        .replyId(r.getId())
+                        .answerId(r.getAnswer().getId())
+                        .userId(r.getUser().getId())
+                        .userName(r.getUser().getName())
+                        .userNickname(isChristmas ? r.getUser().getName():r.getUser().getNickname())
+                        .text(r.getText())
+                        .createdTime(r.getCreatedTime())
+                        .build())
+                .toList();
     }
 }

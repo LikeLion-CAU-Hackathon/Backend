@@ -36,11 +36,11 @@ public class QuestionController {
     }
 
 
-    @GetMapping("/{questionId}/list")
-    public ResponseEntity<List<AnswerResponseDto>> getAnswersByQuestion(@PathVariable Long questionId) {
-        List<AnswerResponseDto> answers = answerService.getAnswersByQuestion(questionId);
-        return ResponseEntity.ok(answers);
-    }
+//    @GetMapping("/{questionId}/list")
+//    public ResponseEntity<List<AnswerResponseDto>> getAnswersByQuestion(@PathVariable Long questionId) {
+//        List<AnswerResponseDto> answers = answerService.getAnswersByQuestion(questionId);
+//        return ResponseEntity.ok(answers);
+//    }
 
     // 질문에 달린 답변 반환 pai
     @GetMapping("/{questionId}/answers")

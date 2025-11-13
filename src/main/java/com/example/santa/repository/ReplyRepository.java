@@ -1,6 +1,7 @@
 package com.example.santa.repository;
 
 import com.example.santa.domain.Reply;
+import com.example.santa.dto.response.ReplyResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

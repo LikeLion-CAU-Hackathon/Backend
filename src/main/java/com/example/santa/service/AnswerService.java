@@ -4,14 +4,13 @@ import com.example.santa.domain.*;
 import com.example.santa.dto.request.AnswerRequestDto;
 import com.example.santa.dto.response.AnswerListDto;
 import com.example.santa.dto.response.AnswerResponseDto;
-import com.example.santa.repository.AnswerRepository;
-import com.example.santa.repository.AppUserRepository;
-import com.example.santa.repository.QuestionRepository;
+import com.example.santa.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -22,6 +21,8 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final AppUserRepository appUserRepository;
     private final QuestionRepository questionRepository;
+    private final ThumbsRepository thumbsRepository;
+    private final ReplyRepository replyRepository;
 
     /**
      * 답변 생성 API
@@ -69,7 +70,22 @@ public class AnswerService {
     }
 
     public List<AnswerListDto> getAnswersWithCounts(Long questionId) {
-        return answerRepository.findAnswersWithCountsByQuestionId(questionId);
+        LocalDate today = LocalDate.now();
+        boolean isChristmas = today.equals(LocalDate.of(2025, 12, 25));
+
+        return answerRepository.findAllByQuestion_IdOrderByCreatedTimeDesc(questionId)
+                .stream()
+                .map(a -> AnswerListDto.builder()
+                        .answerId(a.getId())
+                        .userName(a.getAppUser().getName())
+                        .userNickname(isChristmas ? a.getAppUser().getName() :a.getAppUser().getNickname())
+                        .contents(a.getContents())
+                        .createdTime(a.getCreatedTime())
+                        .likeCount(thumbsRepository.countByAnswer_Id(a.getId()))
+                        .replyCount(replyRepository.countByAnswer_Id(a.getId()))
+                        .build()
+                )
+                .toList();
     }
 
 }
