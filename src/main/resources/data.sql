@@ -1,4 +1,4 @@
-INSERT INTO Member (name, email) VALUES
+INSERT INTO member (name, email) VALUES
                                      ('권정주', 'wjdjoonim@gmail.com'),
                                         ('김아연', 'ahyeoncau@gmail.com'),
                                         ('김영민', 'kimamy371@gmail.com'),
