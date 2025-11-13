@@ -18,19 +18,5 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
     List<Answer> findByQuestionId(long questionId);
 
-    @Query("""
-    select new com.example.santa.dto.response.AnswerListDto(
-        a.id,
-        a.contents,
-        u.name,
-        a.createdTime,
-        (select count(t) from Thumbs t where t.answer.id = a.id),
-        (select count(r) from Reply  r where r.answer.id  = a.id)
-    )
-    from Answer a
-    join a.appUser u
-    where a.question.id = :questionId
-    order by a.createdTime desc
-    """)
-    List<AnswerListDto> findAnswersWithCountsByQuestionId(@Param("questionId") Long questionId);
+    List<Answer> findAllByQuestion_IdOrderByCreatedTimeDesc(Long questionId);
 }

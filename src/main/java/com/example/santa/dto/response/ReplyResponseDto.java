@@ -1,20 +1,20 @@
 package com.example.santa.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
 @Builder
-public class AnswerListDto {
+@AllArgsConstructor
+public class ReplyResponseDto {
+    private Long replyId;
     private Long answerId;
+    private Long userId;
     private String userName;
     private String userNickname;
-    private String contents;
+    private String text;
     private LocalDateTime createdTime;
-    private long likeCount;
-    private long replyCount;
 }
