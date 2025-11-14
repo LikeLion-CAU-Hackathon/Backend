@@ -16,10 +16,14 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "content",nullable = false, length=50)
-    private String content;
-
     @Column(name = "access_day")
     private LocalDate accessDay;
 
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    private String content;
+
+    public Question(LocalDate accessDay, String content) {
+        this.accessDay = accessDay;
+        this.content = content;
+    }
 }

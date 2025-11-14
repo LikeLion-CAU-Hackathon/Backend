@@ -31,7 +31,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create # validate
     properties:
       hibernate:
         format_sql: true
@@ -39,11 +39,7 @@ spring:
 
   sql:
     init:
-      mode: embedded
+      mode: always # embedded
 
 server:
   forward-headers-strategy: framework
-
-
-# jwt:
-  # secret: ${jwt.secret}
