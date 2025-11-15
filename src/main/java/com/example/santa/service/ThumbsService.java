@@ -26,21 +26,23 @@ public class ThumbsService {
     }
 
     @Transactional
-    public void like(Long answerId, Authentication auth) {
+    public boolean like(Long answerId, Authentication auth) {
         AppUser user = getCurrentUser(auth);
         if (thumbsRepository.existsByAnswer_IdAndUser_Id(answerId, user.getId())) {
-            return; // 이미 좋아요면 무시
+            return true; // 이미 좋아요면 무시
         }
         Answer answer = answerRepository.findById(answerId)
                 .orElseThrow(() -> new IllegalArgumentException("답변이 없습니다."));
         Thumbs thumbs = Thumbs.builder().answer(answer).user(user).build();
         thumbsRepository.save(thumbs);
+        return true;
     }
 
     @Transactional
-    public void unlike(Long answerId, Authentication auth) {
+    public boolean unlike(Long answerId, Authentication auth) {
         AppUser user = getCurrentUser(auth);
         thumbsRepository.deleteByAnswer_IdAndUser_Id(answerId, user.getId());
+        return false;
     }
 
     @Transactional(readOnly = true)
