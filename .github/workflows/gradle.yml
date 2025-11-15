@@ -94,10 +94,12 @@ jobs:
           echo "Deploying $JAR_FILE to EC2..."
           
           # EC2 서버로 JAR 파일 전송
-          scp -i private_key.pem -o StrictHostKeyChecking=no $JAR_FILE ${USER}@${HOST}:/home/${USER}/Santa-0.0.1-SNAPSHOT.jar
+          scp -i private_key.pem -o StrictHostKeyChecking=no $JAR_FILE ${USER}@${HOST}:/home/${USER}/Backend/build/libs/Santa-0.0.1-SNAPSHOT.jar
           
           # SSH로 서버 접속하여 애플리케이션 재시작
           ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} << 'EOF'
+            cd ~/Backend
+            
             echo "Stopping existing application..."
             # 기존 프로세스 종료
             pkill -f 'Santa-0.0.1-SNAPSHOT.jar' || true
@@ -106,12 +108,14 @@ jobs:
             sleep 3
             
             echo "Starting new application..."
-            # 새 프로세스 시작
-            nohup java -jar ~/Santa-0.0.1-SNAPSHOT.jar > ~/app.log 2>&1 &
+            # 새 프로세스 백그라운드로 시작
+            nohup java -jar build/libs/Santa-0.0.1-SNAPSHOT.jar \
+              --spring.config.additional-location=file:./application-secret.yml \
+              > app.log 2>&1 &
             
             # 애플리케이션 시작 확인
             echo "Waiting for application to start..."
-            sleep 5
+            sleep 10
             
             if ps aux | grep -q '[S]anta-0.0.1-SNAPSHOT.jar'; then
               echo "Application started successfully!"
@@ -119,7 +123,7 @@ jobs:
               ps aux | grep Santa-0.0.1-SNAPSHOT.jar | grep -v grep
             else
               echo "Application failed to start. Check logs:"
-              tail -30 ~/app.log
+              tail -50 ~/Backend/app.log
               exit 1
             fi
           EOF
