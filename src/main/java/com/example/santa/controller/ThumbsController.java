@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/answers/{answerId}/thumbs")
@@ -15,16 +17,28 @@ public class ThumbsController {
 
     // 좋아요
     @PostMapping
-    public ResponseEntity<Void> like(@PathVariable Long answerId, Authentication auth) {
-        thumbsService.like(answerId, auth);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Map<String, Object>> like(@PathVariable Long answerId, Authentication auth) {
+        boolean liked = thumbsService.like(answerId, auth);
+        long likeCount = thumbsService.count(answerId);
+        return ResponseEntity.ok(
+                Map.of(
+                "liked",liked,
+                "likeCount", likeCount
+                )
+        );
     }
 
     // 좋아요 취소
     @DeleteMapping
-    public ResponseEntity<Void> unlike(@PathVariable Long answerId, Authentication auth) {
-        thumbsService.unlike(answerId, auth);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Map<String, Object>> unlike(@PathVariable Long answerId, Authentication auth) {
+        boolean liked = thumbsService.unlike(answerId, auth); // false 반환
+        long likeCount = thumbsService.count(answerId);
+        return ResponseEntity.ok(
+                Map.of(
+                        "liked", liked,
+                        "likeCount", likeCount
+                )
+        );
     }
 
     // 좋아요 수
