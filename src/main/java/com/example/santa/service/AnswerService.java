@@ -71,7 +71,7 @@ public class AnswerService {
 
     public List<AnswerListDto> getAnswersWithCounts(Long questionId) {
         // LocalDate today = LocalDate.now();
-        LocalDate today = LocalDate.of(2025, 12, 25);
+        LocalDate today = LocalDate.now();
         boolean isChristmas = today.equals(LocalDate.of(2025, 12, 25));
 
         return answerRepository.findAllByQuestion_IdOrderByCreatedTimeDesc(questionId)
