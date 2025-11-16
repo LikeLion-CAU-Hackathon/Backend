@@ -64,6 +64,9 @@ public class SecurityConfig {
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .successHandler(oAuthSuccessHandler)
+                        .failureHandler((request, response, exception) -> {
+                            response.setStatus(401);  // OAuth 실패도 401
+                        })
                 );
 
 
