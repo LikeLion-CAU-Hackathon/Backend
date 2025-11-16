@@ -52,7 +52,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         // 쿠키 설정
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
-                .secure(cookieSecure)
+                .secure(true)
                 .path("/")
                 .maxAge(60 * 60) // 1시간
                 .sameSite("None")
@@ -60,7 +60,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
-                .secure(cookieSecure)
+                .secure(true)
                 .path("/")
                 .maxAge(60L * 60 * 24 * 7) // 7일
                 .sameSite("None")
