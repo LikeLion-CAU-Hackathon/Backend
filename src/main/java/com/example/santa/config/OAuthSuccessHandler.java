@@ -82,8 +82,9 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
 */
         // 토큰을 프론트로 넘기는 방식 (URL fragment 사용)
-        String redirectWithToken = redirectUrl + "#accessToken=" + accessToken;
-
+        String redirectWithToken = redirectUrl
+                + "#accessToken=" + accessToken
+                + "&refreshToken=" + refreshToken;
         response.sendRedirect(redirectWithToken);
     }
 }
