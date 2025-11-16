@@ -74,8 +74,8 @@ public class SecurityConfig {
                     "http://localhost:3000",
                     "http://localhost:5173",
                     "https://hackathon-santa.p-e.kr",   // 프론트가 이 도메인/서브도메인이라면 추가
-                    "https://chungkathon.netlify.app/",
-                    "https://chungkathondevelop.netlify.app/"
+                    "https://chungkathon.netlify.app",
+                    "https://chungkathondevelop.netlify.app"
             ));
             configuration.setAllowedHeaders(Collections.singletonList("*")); // 모든 헤더 허용
             configuration.setAllowCredentials(true);
