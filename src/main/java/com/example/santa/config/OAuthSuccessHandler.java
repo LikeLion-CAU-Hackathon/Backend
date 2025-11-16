@@ -25,11 +25,13 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
     @Value("${app.oauth2.redirect-url}")
     private String redirectUrl;
 
+/*
     @Value("${app.cookie.secure:false}")
     private boolean cookieSecure;
 
     @Value("${app.cookie.same-site:Lax}")
     private String sameSite;
+*/
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -49,6 +51,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         //String a = URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
         //String r = URLEncoder.encode(refreshToken, StandardCharsets.UTF_8);
 
+/*
         // 쿠키 설정
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
@@ -76,5 +79,11 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+*/
+        // 토큰을 프론트로 넘기는 방식 (URL fragment 사용)
+        String redirectWithToken = redirectUrl + "#accessToken=" + accessToken;
+
+        response.sendRedirect(redirectWithToken);
     }
 }
