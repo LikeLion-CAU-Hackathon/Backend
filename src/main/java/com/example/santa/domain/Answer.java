@@ -28,7 +28,7 @@ public class Answer {
     @JoinColumn(name="user_id")
     private AppUser appUser;
 
-    @Column (name = "contents", nullable = false, length = 120)
+    @Column (name = "contents", nullable = false, length = 119)
     private String contents;
 
     @CreatedDate
