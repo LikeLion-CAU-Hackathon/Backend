@@ -20,8 +20,8 @@ app:
   oauth2:
 #    redirect-url: "https://hackathon-santa.p-e.kr/oauth/callback"
 #    redirect-url: "https://hackathon-santa.p-e.kr/calendar"
-    redirect-url: "http://localhost:5173/calendar"
-    #redirect-url: "https://chungkathon.netlify.app/calendar"
+    # redirect-url: "http://localhost:5173/calendar"
+    redirect-url: "https://chungkathon.netlify.app/calendar"
 #  cookie:
 #    secure: true                # HTTPS라서 true
 #    same-site: None              # 프론트가 다른 도메인이면 None 로 변경
