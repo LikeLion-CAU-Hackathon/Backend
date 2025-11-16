@@ -3,6 +3,7 @@ package com.example.santa.service;
 import com.example.santa.domain.*;
 import com.example.santa.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,5 +57,16 @@ public class AppUserService {
 
                     return savedUser;
                 });
+    }
+    public String getMyNickname(Authentication authentication) {
+        if (authentication == null || authentication.getName() == null) {
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
+
+        String email = authentication.getName();
+
+        return appUserRepository.findByEmail(email)
+                .map(AppUser::getNickname)
+                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
     }
 }
