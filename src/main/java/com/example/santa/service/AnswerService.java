@@ -23,6 +23,7 @@ public class AnswerService {
     private final QuestionRepository questionRepository;
     private final ThumbsRepository thumbsRepository;
     private final ReplyRepository replyRepository;
+    private final QuestionNickService questionNickService;
 
     /**
      * 답변 생성 API
@@ -36,7 +37,16 @@ public class AnswerService {
         if(answerRepository.existsByQuestionAndAppUser(question, appUser)){
             throw new IllegalStateException("이미 이 질문에 답변함");
         }
-        Answer newAnswer = new Answer(question, appUser, answerRequestDto.getContents());
+
+        QuestionNick qn = questionNickService.getOrCreate(question, appUser);
+        String nicknameForThisQuestion = qn.getNickname();
+
+        Answer newAnswer = Answer.builder()
+                .question(question)
+                .appUser(appUser)
+                .contents(answerRequestDto.getContents())
+                .nickname(nicknameForThisQuestion)
+                .build();
 
         return answerRepository.save(newAnswer);
     }
@@ -61,6 +71,7 @@ public class AnswerService {
         return answerRepository.existsByQuestionAndAppUser(question, appUser);
     }
 
+
     public List<AnswerResponseDto> getAnswersByQuestion(Long questionId) {
         List<Answer> answers = answerRepository.findByQuestionId(questionId);
 
@@ -78,7 +89,7 @@ public class AnswerService {
                 .stream()
                 .map(a -> AnswerListDto.builder()
                         .answerId(a.getId())
-                        .userNickname(isChristmas ? a.getAppUser().getName() :a.getAppUser().getNickname())
+                        .userNickname(isChristmas ? a.getAppUser().getName() :a.getNickname())
                         .contents(a.getContents())
                         .createdTime(a.getCreatedTime())
                         .likeCount(thumbsRepository.countByAnswer_Id(a.getId()))

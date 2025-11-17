@@ -18,6 +18,7 @@ public class AppUserService {
     private final DailyNounRepository dailyNounRepository;
     private final DailyNickRepository dailyNickRepository;
     private final DailyAdjRepository dailyAdjRepository;
+    private final QuestionNickService questionNickService;
 
     private final Random random = new Random();
 
@@ -58,15 +59,20 @@ public class AppUserService {
                     return savedUser;
                 });
     }
-    public String getMyNickname(Authentication authentication) {
+
+    @Transactional(readOnly = true)
+    public String getMyNicknameByQuestion(Long questionId, Authentication authentication) {
         if (authentication == null || authentication.getName() == null) {
             throw new IllegalStateException("로그인이 필요합니다.");
         }
 
         String email = authentication.getName();
 
-        return appUserRepository.findByEmail(email)
-                .map(AppUser::getNickname)
+        AppUser user = appUserRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+
+        // QuestionNick 가져오기 (없으면 null)
+        return questionNickService
+                .getNickname(questionId, user.getId());
     }
 }
