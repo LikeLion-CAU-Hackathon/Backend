@@ -67,7 +67,6 @@ public class ReplyService {
                         .replyId(r.getId())
                         .answerId(r.getAnswer().getId())
                         .userId(r.getUser().getId())
-                        .userName(r.getUser().getName())
                         .userNickname(isChristmas ? r.getUser().getName():r.getUser().getNickname())
                         .text(r.getText())
                         .createdTime(r.getCreatedTime())

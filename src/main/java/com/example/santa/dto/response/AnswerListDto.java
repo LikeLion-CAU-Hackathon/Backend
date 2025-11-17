@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Builder
 public class AnswerListDto {
     private Long answerId;
-    private String userName;
     private String userNickname;
     private String contents;
     private LocalDateTime createdTime;
