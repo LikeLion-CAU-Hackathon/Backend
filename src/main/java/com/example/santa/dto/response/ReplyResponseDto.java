@@ -13,7 +13,6 @@ public class ReplyResponseDto {
     private Long replyId;
     private Long answerId;
     private Long userId;
-    private String userName;
     private String userNickname;
     private String text;
     private LocalDateTime createdTime;
