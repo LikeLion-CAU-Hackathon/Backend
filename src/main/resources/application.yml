@@ -39,7 +39,7 @@ spring:
 
   sql:
     init:
-      mode: always
+      mode: embedded
 
 server:
   forward-headers-strategy: framework
