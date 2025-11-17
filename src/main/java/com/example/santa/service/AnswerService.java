@@ -78,7 +78,6 @@ public class AnswerService {
                 .stream()
                 .map(a -> AnswerListDto.builder()
                         .answerId(a.getId())
-                        .userName(a.getAppUser().getName())
                         .userNickname(isChristmas ? a.getAppUser().getName() :a.getAppUser().getNickname())
                         .contents(a.getContents())
                         .createdTime(a.getCreatedTime())
