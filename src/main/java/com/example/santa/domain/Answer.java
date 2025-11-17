@@ -1,6 +1,7 @@
 package com.example.santa.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -28,6 +29,9 @@ public class Answer {
     @JoinColumn(name="user_id")
     private AppUser appUser;
 
+    @Column(name = "nickname", nullable = false, length = 50)
+    private String nickname;
+
     @Column (name = "contents", nullable = false, length = 119)
     private String contents;
 
@@ -35,9 +39,11 @@ public class Answer {
     @Column(name = "created_time", updatable = false)
     private LocalDateTime createdTime;
 
-    public Answer(Question question, AppUser appUser, String contents) {
+    @Builder
+    public Answer(Question question, AppUser appUser, String nickname, String contents) {
         this.question = question;
         this.appUser = appUser;
+        this.nickname = nickname;
         this.contents = contents;
     }
 }

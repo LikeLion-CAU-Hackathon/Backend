@@ -2,6 +2,7 @@ package com.example.santa.service;
 
 import com.example.santa.domain.Answer;
 import com.example.santa.domain.AppUser;
+import com.example.santa.domain.QuestionNick;
 import com.example.santa.domain.Reply;
 import com.example.santa.dto.response.ReplyResponseDto;
 import com.example.santa.repository.AnswerRepository;
@@ -25,6 +26,8 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
     private final AnswerRepository answerRepository;
     private final AppUserRepository appUserRepository;
+    private final QuestionNickService questionNickService;
+
 
     @Transactional
     public Reply createReply(Long answerId, String text, Authentication authentication) {
@@ -43,9 +46,14 @@ public class ReplyService {
         Answer answer = answerRepository.findById(answerId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 답변입니다."));
 
+        QuestionNick qn = questionNickService.getOrCreate(answer.getQuestion(), user);
+        String nicknameForThisQuestion = qn.getNickname();
+
+
         Reply reply = Reply.builder()
                 .answer(answer)
                 .user(user)
+                .nickname(nicknameForThisQuestion)
                 .text(text.trim())
                 .createdTime(LocalDateTime.now())
                 .build();
@@ -67,7 +75,7 @@ public class ReplyService {
                         .replyId(r.getId())
                         .answerId(r.getAnswer().getId())
                         .userId(r.getUser().getId())
-                        .userNickname(isChristmas ? r.getUser().getName():r.getUser().getNickname())
+                        .userNickname(isChristmas ? r.getUser().getName():r.getNickname())
                         .text(r.getText())
                         .createdTime(r.getCreatedTime())
                         .build())

@@ -18,7 +18,7 @@ spring:
 app:
   oauth2:
 #    redirect-url: "http://localhost:3000/oauth/callback"
-    redirect-url: "http://localhost:5173/calendar"
+    redirect-url: "http://localhost:8080/swagger-ui/index.html"
   cookie:
     secure: false
     same-site: Lax
