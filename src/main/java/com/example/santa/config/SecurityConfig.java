@@ -64,10 +64,13 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .successHandler(oAuthSuccessHandler)
                         .failureHandler((request, response, exception) -> {
-                            response.setStatus(401);  // OAuth 실패도 401
+                            exception.printStackTrace();  // 콘솔에 전체 스택 찍기
+                            // 혹은 log.error("OAuth2 로그인 실패", exception);
+
+                            response.sendRedirect("/login?error"); // 임시: 기본 에러 페이지로 보내기
+                            // 또는 response.setStatus(401); 그대로 두고 싶으면 로그만이라도 찍자
                         })
                 );
-
 
         // JWT 필터 등록 (모든 보호 자원 접근 전 토큰 검증)
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -30,6 +30,9 @@ public class Reply {
     @JoinColumn(name = "user_id", nullable = false)
     private AppUser user;
 
+    @Column(name = "nickname", nullable = false, length = 50)
+    private String nickname;
+
     @Column(name = "text", nullable = false, length = 100)
     private String text;
 
